@@ -14,8 +14,9 @@
             useMouseWheel: true,
             useSwipe: false,
             disabledRanges: [],
+            callback: null
             
-         }, options );
+         }, options || {} );
         scrollSpeed = settings.scrollSpeed;
         useMouseWheel = settings.useMouseWheel;
         useSwipe = settings.useSwipe;
@@ -29,6 +30,7 @@
             //detect mousedown and mouseup + coordinates
             //check whether swipe up or down
         }
+        return this;
         function PageScroll(e){
             $(window).off("DOMMouseScroll mousewheel");
             currentPosition = $(window).scrollTop();
@@ -81,15 +83,15 @@
             if(closestDelta != 0 && closestElement != null){
                 $('html, body').animate({
                     scrollTop: closestElement.offset().top
-                }, 500);
+                },
+                500,
+                "swing",
+                function(){
+                    typeof settings.callback == 'function' && settings.callback != null ? settings.callback.call() : settings.callback = null
+                });
             }
+
         }
     };
  
 }( jQuery ));
-/* usage */
-/*
-    $(document).ready(function(){
-        $("body").betterPageScroll({});
-    });
-*/
