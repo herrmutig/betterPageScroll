@@ -43,7 +43,7 @@
             scrollToNextAnchor();
             window.setTimeout(function(){
                 $(window).one("DOMMouseScroll mousewheel", PageScroll);
-            }, 500);
+            }, scrollSpeed);
             
         }
         
@@ -84,7 +84,7 @@
                 $('html, body').animate({
                     scrollTop: closestElement.offset().top
                 },
-                500,
+                scrollSpeed,
                 "swing",
                 function(){
                     typeof settings.callback == 'function' && settings.callback != null ? settings.callback.call() : settings.callback = null
