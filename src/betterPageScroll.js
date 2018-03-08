@@ -7,12 +7,14 @@
     var useMouseWheel;
     var useSwipe;
     var disabledRanges;
+    var useDisabledRanges;
     $.fn.betterPageScroll = function( options ) {
         var settings = $.extend({
          //put default settings here
             scrollSpeed: 500,
             useMouseWheel: true,
             useSwipe: false,
+            useDisabledRanges: false,
             disabledRanges: [],
             callback: null
             
@@ -21,7 +23,7 @@
         useMouseWheel = settings.useMouseWheel;
         useSwipe = settings.useSwipe;
         disabledRanges = settings.disabledRanges;
-        
+        useDisabledRanges = settings.useDisabledRanges;
         if(useMouseWheel){
             $(window).one("DOMMouseScroll mousewheel", PageScroll);
         }
@@ -32,15 +34,18 @@
         }
         return this;
         function PageScroll(e){
-            $(window).off("DOMMouseScroll mousewheel");
             currentPosition = $(window).scrollTop();
-            
+            $(window).off("DOMMouseScroll mousewheel");
+                
             if(e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
                 direction = CONST_MOVE_UP;
             } else {
                 direction = CONST_MOVE_DOWN;
             }
-            scrollToNextAnchor();
+            if(!useDisabledRanges || !inDisabledRange(currentPosition)){
+               scrollToNextAnchor();
+            }
+                
             window.setTimeout(function(){
                 $(window).one("DOMMouseScroll mousewheel", PageScroll);
             }, scrollSpeed);
@@ -84,13 +89,25 @@
                 $('html, body').animate({
                     scrollTop: closestElement.offset().top
                 },
-                scrollSpeed,
-                "swing",
-                function(){
+                scrollSpeed
+                );
+                window.setTimeout(function(){
                     typeof settings.callback == 'function' && settings.callback != null ? settings.callback.call() : settings.callback = null
-                });
+                }, scrollSpeed);
             }
-
+        }
+        
+        //disabledRanges: Array containing objects with two properties, start and end
+        function inDisabledRange(currentPosition){
+            console.log(currentPosition);
+            
+            for(var i = 0; i<disabledRanges.length; i++){
+                if(currentPosition>=disabledRanges[i].start && currentPosition<=disabledRanges[i].end){
+                console.log("in disabled range");
+                    return true;
+                }
+            }
+            return false;
         }
     };
  
