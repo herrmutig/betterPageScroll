@@ -32,9 +32,13 @@ $(document).ready(function(){
 
 ### Options
 `scrollSpeed`: Determines the speed of the scrolling animation in milliseconds. 
+
 `callback`: Callback function executed after scrolling to an anchor.
+
 `useDisabledRanges`: Enables the use of disabled ranges.
+
 `disabledRanges`: Array of object containing start and end of ranges, for which there shall not be a scroll to an anchor.
+
 
 
 
